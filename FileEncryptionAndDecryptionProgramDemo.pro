@@ -32,8 +32,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     README.MD
-
-win32 {
-INCLUDEPATH += $$PWD/openssl/include
-LIBS += -L$$PWD/openssl/lib -llibcrypto
-}
