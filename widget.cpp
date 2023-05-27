@@ -18,8 +18,7 @@ Widget::Widget(QWidget *parent)
     ui->progressBar->setRange(0,100);
     connect(this->ui->lineEdit,&QLineEdit::textChanged,this,[=](){
        this->ui->textEdit->append(QString("已经检测到："));
-       this->ui->textEdit->append(QString(filePath));
-
+       this->ui->textEdit->append(ui->lineEdit_2->text());
     });
 }
 
@@ -54,7 +53,7 @@ int Widget::fileEncryption()
         passwordKey = ui->lineEdit_2->text().toStdString();
         pwdlen = (int)passwordKey.length();
         ui->textEdit->append(QString("加密程序已经成功读取你的密钥("));
-        ui->textEdit->append(QString(pwdlen));
+        ui->textEdit->append(ui->lineEdit_2->text());
         ui->textEdit->append(QString("字符)。"));
     }
     else
@@ -73,6 +72,12 @@ int Widget::fileEncryption()
     file.open(QIODevice::ReadOnly);
     //获取文件信息
     QFileInfo fileInfo(filePath);
+
+
+
+
+
+
     //创建加密后文件
     QString newFile = fileInfo.absolutePath() + "/fileEncryption_" +fileInfo.fileName();
     qDebug() << newFile;
@@ -85,6 +90,9 @@ int Widget::fileEncryption()
     QDataStream fileStrem(&file);
     QDataStream file_edStream(&file_ed);
     qint64 fileSize = fileInfo.size();
+
+    this->ui->textEdit->append(QString("文件大小："));
+    this->ui->textEdit->append(QString::number(fileSize));
 
     int i = 0;
     qint64 progressBarNum = 0;
@@ -105,14 +113,21 @@ int Widget::fileEncryption()
         buffer[0] ^= passwordKey[i++ % pwdlen];
         //从buffer中写入读取到的字节到目标文件流
         file_edStream.writeRawData(buffer, bytesRead);
-        ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 80));
-
+        ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 79));
     }
+
+
+//    //追加文件类型
+//    QString ap = "FileEncryptionAndDecryptionProgramDemo" + fileInfo.suffix();
+//    std::string strap = ap.toStdString();
+//    const char *chap = strap.data();
+//    file_edStream.writeRawData(chap, strap.length());
+
     ui->progressBar->setValue(100);
     //关闭文件
     file_ed.close();
     file.close();
-
+    this->ui->textEdit->append(QString("加密完成。"));
     return 1;
 }
 
@@ -142,8 +157,8 @@ int Widget::fileDecryption()
         passwordKey = ui->lineEdit_2->text().toStdString();
         pwdlen = (int)passwordKey.length();
         ui->textEdit->append(QString("解密程序已经成功读取你的密钥("));
-        ui->textEdit->append(QString(pwdlen));
-        ui->textEdit->append(QString("字符)。"));
+        ui->textEdit->append(ui->lineEdit_2->text());
+        ui->textEdit->append(QString(")。"));
     }
     else
     {
@@ -162,6 +177,13 @@ int Widget::fileDecryption()
     file.open(QIODevice::ReadOnly);
     //获取文件信息
     QFileInfo fileInfo(filePath);
+    //文件流打开
+    QDataStream fileStrem(&file);
+    //获取文件大小
+    qint64 fileSize = fileInfo.size();
+    this->ui->textEdit->append(QString("文件大小："));
+    this->ui->textEdit->append(QString::number(fileSize));
+
     //创建加密后文件
     QString newFile = fileInfo.absolutePath() + "/fileDecryption_" +fileInfo.fileName();
     qDebug() << newFile;
@@ -169,10 +191,38 @@ int Widget::fileDecryption()
     QFile file_ed(newFile);
     file_ed.open(QIODevice::WriteOnly);
     ui->progressBar->setValue(20);
-    //文件流打开
-    QDataStream fileStrem(&file);
     QDataStream file_edStream(&file_ed);
-    qint64 fileSize = fileInfo.size();
+
+//    file.seek(fileSize - 50);
+//    int n = 50;
+//    int flag = -1;
+//    while(!file.atEnd())
+//    {
+//        char *c = nullptr;
+//        file.getChar(c);
+//        if(*c == '.')
+//        {
+//            flag = n;
+//        }
+//        n--;
+//    }
+
+//    QString suName = ".";
+
+//    file.seek(fileSize - n);
+//    while(!file.atEnd())
+//    {
+//        char *c = nullptr;
+//        file.getChar(c);
+//        suName += *c;
+//    }
+//    ui->textEdit->append(QString("检测到文件后缀"));
+//    ui->textEdit->append(suName);
+
+
+
+
+
 
     qint64 progressBarNum = 0;
     int i = 0;
@@ -193,13 +243,15 @@ int Widget::fileDecryption()
         buffer[0] ^= passwordKey[i++ % pwdlen];
         //从buffer中写入读取到的字节到目标文件流
         file_edStream.writeRawData(buffer, bytesRead);
-        ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 80));
+        ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 79));
     }
+
 
     //关闭文件
     file_ed.close();
     file.close();
     ui->progressBar->setValue(100);
+    this->ui->textEdit->append(QString("解密完成。"));
     return 1;
 
 }
@@ -216,15 +268,15 @@ void Widget::on_pushButton_clicked()
 
         if(filePath.isEmpty())
         {
-            this->ui->textEdit->append("没有选择文件！\n");
+            this->ui->textEdit->append(QString("没有选择文件！\n"));
             QMessageBox::warning(this,"警告","文件路径不能为空");
             return;
         }
         else
         {
-            this->ui->textEdit->append("选择文件：");
+            this->ui->textEdit->append(QString("选择文件："));
             this->ui->textEdit->append(filePath);
-            this->ui->textEdit->append("\n");
+            this->ui->textEdit->append(QString("\n"));
             //将文件路径放入到 lineEdit中
             this->ui->lineEdit->setText(filePath);
         }
@@ -245,8 +297,6 @@ void Widget::on_pushButton_3_clicked()
     this->close();
 }
 
-/////////////////////////重写鼠标点击事件///////////////////////////
-//重写鼠标点击事件以实现标题栏功能，并监控按下事件防止点击按钮发生窗口闪动
 void Widget::mousePressEvent(QMouseEvent *event)
 {
     m_lastPos = event->globalPos();
