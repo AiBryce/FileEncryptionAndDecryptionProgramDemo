@@ -10,10 +10,18 @@ QT_END_NAMESPACE
 class Widget : public QWidget
 {
     Q_OBJECT
+private:
+    QString filePath; //加密文件
+
+
+
 
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::Widget *ui;
