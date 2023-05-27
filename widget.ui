@@ -13,27 +13,64 @@
   <property name="windowTitle">
    <string>Widget</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">    *{background-color:rgb(255, 255, 255);}
+QPushButton
+{
+    color:white;
+    background-color:rgb(51, 204, 204);
+    border-radius:5px;
+}
+
+QPushButton:hover
+{
+background-color:rgb(0,130,150);
+border:2px solid #5F92B2;
+border-radius:5px;
+color:white;
+}
+QLineEdit
+{
+border: 1px solid rgb(51, 204, 204);
+}
+QProgressBar
+{
+border: 1px solid rgb(51, 204, 204);
+}
+QTextEdit
+{
+border: 1px solid rgb(51, 204, 204);
+}
+QLabel
+{
+border: 1px solid rgb(51, 204, 204);
+}
+</string>
+  </property>
   <widget class="QWidget" name="verticalWidget" native="true">
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>30</y>
+     <y>70</y>
      <width>691</width>
      <height>321</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <item>
      <widget class="QWidget" name="horizontalWidget_2" native="true">
@@ -100,6 +137,18 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <property name="spacing">
+        <number>1</number>
+       </property>
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>1</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
         <number>1</number>
        </property>
        <item>
@@ -178,8 +227,17 @@
        </item>
        <item>
         <widget class="QProgressBar" name="progressBar">
+         <property name="styleSheet">
+          <string notr="true">QProgressBar::chunk {
+               background-color:rgb(51, 204, 204);
+               width: 20px;
+     }</string>
+         </property>
          <property name="value">
-          <number>0</number>
+          <number>25</number>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -199,7 +257,7 @@
    <property name="geometry">
     <rect>
      <x>190</x>
-     <y>390</y>
+     <y>420</y>
      <width>422</width>
      <height>91</height>
     </rect>
@@ -211,17 +269,20 @@
     </size>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
     <property name="leftMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="topMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="rightMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin">
-     <number>1</number>
+     <number>0</number>
     </property>
     <item>
      <widget class="QPushButton" name="pushButton">
@@ -248,6 +309,9 @@
        </size>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <property name="leftMargin">
         <number>0</number>
        </property>
@@ -290,6 +354,97 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QWidget" name="horizontalWidget_4" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>830</width>
+     <height>50</height>
+    </rect>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">
+  background-color:rgb(51, 204, 204);</string>
+   </property>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>14</y>
+      <width>178</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>730</width>
+      <height>16777215</height>
+     </size>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:rgb(255, 255, 255)</string>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;文件加密解密程序&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::AutoText</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_3">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>0</y>
+      <width>50</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+      <horstretch>0</horstretch>
+      <verstretch>100</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>50</width>
+      <height>50</height>
+     </size>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:hover
+{
+background-color:rgb(51, 204, 204);
+border: 0px solid #FFFFFF;
+               border-radius: 0px;
+
+}</string>
+    </property>
+    <property name="text">
+     <string>X</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

@@ -12,12 +12,13 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
+    this->setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
     ui->textEdit->setWordWrapMode(QTextOption::NoWrap);
-
+    ui->progressBar->setRange(0,100);
     connect(this->ui->lineEdit,&QLineEdit::textChanged,this,[=](){
        this->ui->textEdit->append(QString("已经检测到："));
-        this->ui->textEdit->append(QString(filePath));
+       this->ui->textEdit->append(QString(filePath));
 
     });
 }
@@ -28,7 +29,7 @@ Widget::~Widget()
 }
 
 
-int Widget::fileEncryption(QString filePath)
+int Widget::fileEncryption()
 {
     //加密文件并生成新文件，成功返回1，失败返回0
     //密钥
@@ -36,25 +37,36 @@ int Widget::fileEncryption(QString filePath)
     //密钥长度
     int pwdlen;
     //判断文件路径是否为空
+    QString filePath = ui->lineEdit->text();
     if(!filePath.isEmpty())
         this->ui->textEdit->append(QString("加密程序已经成功读取你的文件。"));
     else
+    {
+        ui->textEdit->setTextColor(QColor(255,0,0));
         this->ui->textEdit->append(QString("没有检测到文件路径。"));
+        ui->textEdit->setTextColor(QColor(0,0,0));
+        return 0;
+    }
+    ui->progressBar->setValue(2);
     //判断密钥是否为空
     if(!(ui->lineEdit_2->text().isEmpty()))
     {
         passwordKey = ui->lineEdit_2->text().toStdString();
         pwdlen = (int)passwordKey.length();
-        ui->textEdit->append(QString("加密程序已经成功读取你的密钥(").arg(pwdlen).arg("字符)。"));
+        ui->textEdit->append(QString("加密程序已经成功读取你的密钥("));
+        ui->textEdit->append(QString(pwdlen));
+        ui->textEdit->append(QString("字符)。"));
     }
     else
     {
+        ui->textEdit->setTextColor(QColor(255,0,0));
         ui->textEdit->append(QString("没有检测到密钥。"));
+        ui->textEdit->setTextColor(QColor(0,0,0));
         return 0;
     }
-
+    ui->progressBar->setValue(4);
     this->ui->textEdit->append(QString("正在加密……"));
-
+    ui->progressBar->setValue(6);
     //打开文件
     QFile file(filePath);
     //只读方式打开
@@ -67,20 +79,15 @@ int Widget::fileEncryption(QString filePath)
     //以只写方式打开加密后文件
     QFile file_ed(newFile);
     file_ed.open(QIODevice::WriteOnly);
+    ui->progressBar->setValue(20);
 
+    //文件流打开
     QDataStream fileStrem(&file);
     QDataStream file_edStream(&file_ed);
-//    while(!fileStrem.atEnd())
-//    {
-//        char *ch;
-//        quint32 len = 1;
-//        if(fileStrem.readRawData(ch,len))
-//        {
-//            file_edStream.writeBytes(ch,len);
-//        }
-//    }
+    qint64 fileSize = fileInfo.size();
 
     int i = 0;
+    qint64 progressBarNum = 0;
     while(!fileStrem.atEnd())
     {
         uint bufferSize = 1;
@@ -98,8 +105,10 @@ int Widget::fileEncryption(QString filePath)
         buffer[0] ^= passwordKey[i++ % pwdlen];
         //从buffer中写入读取到的字节到目标文件流
         file_edStream.writeRawData(buffer, bytesRead);
-    }
+        ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 80));
 
+    }
+    ui->progressBar->setValue(100);
     //关闭文件
     file_ed.close();
     file.close();
@@ -107,7 +116,7 @@ int Widget::fileEncryption(QString filePath)
     return 1;
 }
 
-int Widget::fileDecryption(QString filePath)
+int Widget::fileDecryption()
 {
     //加密文件并生成新文件，成功返回1，失败返回0
     //密钥
@@ -115,21 +124,33 @@ int Widget::fileDecryption(QString filePath)
     //密钥长度
     int pwdlen;
     //判断文件路径是否为空
+    QString filePath = ui->lineEdit->text();
     if(!filePath.isEmpty())
-        this->ui->textEdit->append(QString("加密程序已经成功读取你的文件。"));
+        this->ui->textEdit->append(QString("解密程序已经成功读取你的文件。"));
     else
+    {
+        ui->textEdit->setTextColor(QColor(255,0,0));
         this->ui->textEdit->append(QString("没有检测到文件路径。"));
+        ui->textEdit->setTextColor(QColor(0,0,0));
+        return 0;
+    }
+
     ui->progressBar->setValue(2);
     //判断密钥是否为空
     if(!(ui->lineEdit_2->text().isEmpty()))
     {
         passwordKey = ui->lineEdit_2->text().toStdString();
         pwdlen = (int)passwordKey.length();
-        ui->textEdit->append(QString("加密程序已经成功读取你的密钥(").arg(pwdlen).arg("字符)。"));
+        ui->textEdit->append(QString("解密程序已经成功读取你的密钥("));
+        ui->textEdit->append(QString(pwdlen));
+        ui->textEdit->append(QString("字符)。"));
     }
     else
     {
+        ui->textEdit->setTextColor(QColor(255,0,0));
         ui->textEdit->append(QString("没有检测到密钥。"));
+        ui->textEdit->setTextColor(QColor(0,0,0));
+
         return 0;
     }
     ui->progressBar->setValue(4);
@@ -148,18 +169,12 @@ int Widget::fileDecryption(QString filePath)
     QFile file_ed(newFile);
     file_ed.open(QIODevice::WriteOnly);
     ui->progressBar->setValue(20);
+    //文件流打开
     QDataStream fileStrem(&file);
     QDataStream file_edStream(&file_ed);
-//    while(!fileStrem.atEnd())
-//    {
-//        char *ch;
-//        quint32 len = 1;
-//        if(fileStrem.readRawData(ch,len))
-//        {
-//            file_edStream.writeBytes(ch,len);
-//        }
-//    }
+    qint64 fileSize = fileInfo.size();
 
+    qint64 progressBarNum = 0;
     int i = 0;
     while(!fileStrem.atEnd())
     {
@@ -178,6 +193,7 @@ int Widget::fileDecryption(QString filePath)
         buffer[0] ^= passwordKey[i++ % pwdlen];
         //从buffer中写入读取到的字节到目标文件流
         file_edStream.writeRawData(buffer, bytesRead);
+        ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 80));
     }
 
     //关闭文件
@@ -216,10 +232,40 @@ void Widget::on_pushButton_clicked()
 
 void Widget::on_pushButton_2_clicked()
 {
-    fileEncryption(filePath);
+    fileEncryption();
 }
 
 void Widget::on_pushButton_0_clicked()
 {
-    fileDecryption(filePath);
+    fileDecryption();
 }
+
+void Widget::on_pushButton_3_clicked()
+{
+    this->close();
+}
+
+/////////////////////////重写鼠标点击事件///////////////////////////
+//重写鼠标点击事件以实现标题栏功能，并监控按下事件防止点击按钮发生窗口闪动
+void Widget::mousePressEvent(QMouseEvent *event)
+{
+    m_lastPos = event->globalPos();
+    isPressedWidget = true; // 当前鼠标按下的即是QWidget而非界面上布局的其它控件
+}
+
+void Widget::mouseMoveEvent(QMouseEvent *event)
+{
+    if (isPressedWidget) {
+            this->move(this->x() + (event->globalX() - m_lastPos.x()),
+                       this->y() + (event->globalY() - m_lastPos.y()));
+            m_lastPos = event->globalPos();
+        }
+}
+
+void Widget::mouseReleaseEvent(QMouseEvent *event)
+{
+
+    m_lastPos = event->globalPos();
+    isPressedWidget = false; // 鼠标松开时，置为false
+}
+
