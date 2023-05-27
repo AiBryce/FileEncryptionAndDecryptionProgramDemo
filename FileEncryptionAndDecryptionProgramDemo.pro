@@ -16,10 +16,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    encryptionanddecryption.cpp \
     main.cpp \
     widget.cpp
 
 HEADERS += \
+    encryptionanddecryption.h \
     widget.h
 
 FORMS += \
@@ -32,3 +34,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     README.MD
+
+win32 {
+INCLUDEPATH += $$PWD/openssl/include
+LIBS += -L$$PWD/openssl/lib -llibcrypto
+}

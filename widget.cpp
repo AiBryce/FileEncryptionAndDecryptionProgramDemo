@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QDataStream>
+#include <string>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -13,19 +15,179 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     ui->textEdit->setWordWrapMode(QTextOption::NoWrap);
 
-
     connect(this->ui->lineEdit,&QLineEdit::textChanged,this,[=](){
        this->ui->textEdit->append(QString("已经检测到："));
         this->ui->textEdit->append(QString(filePath));
 
     });
-
 }
 
 Widget::~Widget()
 {
     delete ui;
 }
+
+
+int Widget::fileEncryption(QString filePath)
+{
+    //加密文件并生成新文件，成功返回1，失败返回0
+    //密钥
+    std::string passwordKey;
+    //密钥长度
+    int pwdlen;
+    //判断文件路径是否为空
+    if(!filePath.isEmpty())
+        this->ui->textEdit->append(QString("加密程序已经成功读取你的文件。"));
+    else
+        this->ui->textEdit->append(QString("没有检测到文件路径。"));
+    //判断密钥是否为空
+    if(!(ui->lineEdit_2->text().isEmpty()))
+    {
+        passwordKey = ui->lineEdit_2->text().toStdString();
+        pwdlen = (int)passwordKey.length();
+        ui->textEdit->append(QString("加密程序已经成功读取你的密钥(").arg(pwdlen).arg("字符)。"));
+    }
+    else
+    {
+        ui->textEdit->append(QString("没有检测到密钥。"));
+        return 0;
+    }
+
+    this->ui->textEdit->append(QString("正在加密……"));
+
+    //打开文件
+    QFile file(filePath);
+    //只读方式打开
+    file.open(QIODevice::ReadOnly);
+    //获取文件信息
+    QFileInfo fileInfo(filePath);
+    //创建加密后文件
+    QString newFile = fileInfo.absolutePath() + "/fileEncryption_" +fileInfo.fileName();
+    qDebug() << newFile;
+    //以只写方式打开加密后文件
+    QFile file_ed(newFile);
+    file_ed.open(QIODevice::WriteOnly);
+
+    QDataStream fileStrem(&file);
+    QDataStream file_edStream(&file_ed);
+//    while(!fileStrem.atEnd())
+//    {
+//        char *ch;
+//        quint32 len = 1;
+//        if(fileStrem.readRawData(ch,len))
+//        {
+//            file_edStream.writeBytes(ch,len);
+//        }
+//    }
+
+    int i = 0;
+    while(!fileStrem.atEnd())
+    {
+        uint bufferSize = 1;
+        char buffer[1];
+        //从文件流中读取缓存区大小的字节到buffer中
+
+        qint64 bytesRead = fileStrem.readRawData(buffer, bufferSize);
+
+        //检查读取是否成功
+        if (bytesRead == -1)
+        {
+            //错误处理
+            break;
+        }
+        buffer[0] ^= passwordKey[i++ % pwdlen];
+        //从buffer中写入读取到的字节到目标文件流
+        file_edStream.writeRawData(buffer, bytesRead);
+    }
+
+    //关闭文件
+    file_ed.close();
+    file.close();
+
+    return 1;
+}
+
+int Widget::fileDecryption(QString filePath)
+{
+    //加密文件并生成新文件，成功返回1，失败返回0
+    //密钥
+    std::string passwordKey;
+    //密钥长度
+    int pwdlen;
+    //判断文件路径是否为空
+    if(!filePath.isEmpty())
+        this->ui->textEdit->append(QString("加密程序已经成功读取你的文件。"));
+    else
+        this->ui->textEdit->append(QString("没有检测到文件路径。"));
+    ui->progressBar->setValue(2);
+    //判断密钥是否为空
+    if(!(ui->lineEdit_2->text().isEmpty()))
+    {
+        passwordKey = ui->lineEdit_2->text().toStdString();
+        pwdlen = (int)passwordKey.length();
+        ui->textEdit->append(QString("加密程序已经成功读取你的密钥(").arg(pwdlen).arg("字符)。"));
+    }
+    else
+    {
+        ui->textEdit->append(QString("没有检测到密钥。"));
+        return 0;
+    }
+    ui->progressBar->setValue(4);
+    this->ui->textEdit->append(QString("正在加密……"));
+    ui->progressBar->setValue(6);
+    //打开文件
+    QFile file(filePath);
+    //只读方式打开
+    file.open(QIODevice::ReadOnly);
+    //获取文件信息
+    QFileInfo fileInfo(filePath);
+    //创建加密后文件
+    QString newFile = fileInfo.absolutePath() + "/fileDecryption_" +fileInfo.fileName();
+    qDebug() << newFile;
+    //以只写方式打开加密后文件
+    QFile file_ed(newFile);
+    file_ed.open(QIODevice::WriteOnly);
+    ui->progressBar->setValue(20);
+    QDataStream fileStrem(&file);
+    QDataStream file_edStream(&file_ed);
+//    while(!fileStrem.atEnd())
+//    {
+//        char *ch;
+//        quint32 len = 1;
+//        if(fileStrem.readRawData(ch,len))
+//        {
+//            file_edStream.writeBytes(ch,len);
+//        }
+//    }
+
+    int i = 0;
+    while(!fileStrem.atEnd())
+    {
+        uint bufferSize = 1;
+        char buffer[1];
+        //从文件流中读取缓存区大小的字节到buffer中
+
+        qint64 bytesRead = fileStrem.readRawData(buffer, bufferSize);
+
+        //检查读取是否成功
+        if (bytesRead == -1)
+        {
+            //错误处理
+            break;
+        }
+        buffer[0] ^= passwordKey[i++ % pwdlen];
+        //从buffer中写入读取到的字节到目标文件流
+        file_edStream.writeRawData(buffer, bytesRead);
+    }
+
+    //关闭文件
+    file_ed.close();
+    file.close();
+    ui->progressBar->setValue(100);
+    return 1;
+
+}
+
 
 
 void Widget::on_pushButton_clicked()
@@ -49,33 +211,15 @@ void Widget::on_pushButton_clicked()
             this->ui->textEdit->append("\n");
             //将文件路径放入到 lineEdit中
             this->ui->lineEdit->setText(filePath);
-
-            //将文件内容读取到 textEdit中
-            QFile file(filePath);
-
-            //指定打开方式
-            file.open(QIODevice::ReadOnly);
-
-            //Qt默认支持格式是utf-8
-            QByteArray array;
-
-            array = file.readLine();
-
-            while(!file.atEnd())
-            {
-                array += file.readLine();
-            }
-
-
-            this->ui->textEdit->append(array);
-            file.close();
-
         }
+}
 
+void Widget::on_pushButton_2_clicked()
+{
+    fileEncryption(filePath);
+}
 
-
-
-
-
-
+void Widget::on_pushButton_0_clicked()
+{
+    fileDecryption(filePath);
 }
