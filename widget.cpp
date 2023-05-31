@@ -74,10 +74,6 @@ int Widget::fileEncryption()
     QFileInfo fileInfo(filePath);
 
 
-
-
-
-
     //创建加密后文件
     QString newFile = fileInfo.absolutePath() + "/fileEncryption_" +fileInfo.fileName();
     qDebug() << newFile;
