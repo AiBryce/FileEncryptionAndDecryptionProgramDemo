@@ -17,12 +17,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
+    passwordgenerator.cpp \
+    thefileisbeingencryptedanddecrypted.cpp \
     widget.cpp
 
 HEADERS += \
+    passwordgenerator.h \
+    thefileisbeingencryptedanddecrypted.h \
     widget.h
 
 FORMS += \
+    passwordgenerator.ui \
+    thefileisbeingencryptedanddecrypted.ui \
     widget.ui
 
 # Default rules for deployment.

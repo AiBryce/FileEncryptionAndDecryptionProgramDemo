@@ -1,12 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
 
-#include <QFile>
-#include <QDebug>
-#include <QFileDialog>
-#include <QMessageBox>
-#include <QDataStream>
-#include <string>
+
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -15,6 +10,25 @@ Widget::Widget(QWidget *parent)
     this->setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
     ui->textEdit->setWordWrapMode(QTextOption::NoWrap);
+    QTextCursor cur = ui->textEdit->textCursor();
+    cur.setKeepPositionOnInsert(true);
+    cur.movePosition(QTextCursor::End);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//setKeepPositionOnInsert(True)
     ui->progressBar->setRange(0,100);
     connect(this->ui->lineEdit,&QLineEdit::textChanged,this,[=](){
        this->ui->textEdit->append(QString("已经检测到："));
@@ -46,6 +60,7 @@ int Widget::fileEncryption()
         ui->textEdit->setTextColor(QColor(0,0,0));
         return 0;
     }
+
     ui->progressBar->setValue(2);
     //判断密钥是否为空
     if(!(ui->lineEdit_2->text().isEmpty()))
@@ -63,8 +78,10 @@ int Widget::fileEncryption()
         ui->textEdit->setTextColor(QColor(0,0,0));
         return 0;
     }
+
     ui->progressBar->setValue(4);
     this->ui->textEdit->append(QString("正在加密……"));
+
     ui->progressBar->setValue(6);
     //打开文件
     QFile file(filePath);
@@ -80,12 +97,14 @@ int Widget::fileEncryption()
     //以只写方式打开加密后文件
     QFile file_ed(newFile);
     file_ed.open(QIODevice::WriteOnly);
+
     ui->progressBar->setValue(20);
 
     //文件流打开
     QDataStream fileStrem(&file);
     QDataStream file_edStream(&file_ed);
     qint64 fileSize = fileInfo.size();
+
 
     this->ui->textEdit->append(QString("文件大小："));
     this->ui->textEdit->append(QString::number(fileSize));
@@ -109,7 +128,7 @@ int Widget::fileEncryption()
         buffer[0] ^= passwordKey[i++ % pwdlen];
         //从buffer中写入读取到的字节到目标文件流
         file_edStream.writeRawData(buffer, bytesRead);
-        ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 79));
+        ui->progressBar->setValue((int)(20 + progressBarNum++ * 1.0 / fileSize * 79));
     }
 
 
@@ -315,3 +334,14 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
     isPressedWidget = false; // 鼠标松开时，置为false
 }
 
+void Widget::on_pushButton_4_clicked()
+{
+    PasswordGenerator *pg = new PasswordGenerator();
+    connect(pg,&PasswordGenerator::encryptionCompleted,this,[=](QString key){
+        key.chop(1);
+       this->ui->lineEdit_2->setText(key);
+    });
+    pg->show();
+
+    //pg->close();
+}

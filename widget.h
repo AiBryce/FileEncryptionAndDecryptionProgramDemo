@@ -5,7 +5,14 @@
 #include <QEvent>
 #include<QMouseEvent>
 #include <QCryptographicHash>
-
+#include <QFile>
+#include <QDebug>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QDataStream>
+#include <string>
+#include <QThread>
+#include "passwordgenerator.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -37,7 +44,7 @@ private slots:
 
     void on_pushButton_3_clicked();
 
-
+    void on_pushButton_4_clicked();
 
 private:
     Ui::Widget *ui;
