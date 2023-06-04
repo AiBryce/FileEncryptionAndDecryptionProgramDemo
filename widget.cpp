@@ -14,21 +14,6 @@ Widget::Widget(QWidget *parent)
     cur.setKeepPositionOnInsert(true);
     cur.movePosition(QTextCursor::End);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//setKeepPositionOnInsert(True)
     ui->progressBar->setRange(0,100);
     connect(this->ui->lineEdit,&QLineEdit::textChanged,this,[=](){
        this->ui->textEdit->append(QString("已经检测到："));
@@ -132,12 +117,6 @@ int Widget::fileEncryption()
     }
 
 
-//    //追加文件类型
-//    QString ap = "FileEncryptionAndDecryptionProgramDemo" + fileInfo.suffix();
-//    std::string strap = ap.toStdString();
-//    const char *chap = strap.data();
-//    file_edStream.writeRawData(chap, strap.length());
-
     ui->progressBar->setValue(100);
     //关闭文件
     file_ed.close();
@@ -207,36 +186,6 @@ int Widget::fileDecryption()
     file_ed.open(QIODevice::WriteOnly);
     ui->progressBar->setValue(20);
     QDataStream file_edStream(&file_ed);
-
-//    file.seek(fileSize - 50);
-//    int n = 50;
-//    int flag = -1;
-//    while(!file.atEnd())
-//    {
-//        char *c = nullptr;
-//        file.getChar(c);
-//        if(*c == '.')
-//        {
-//            flag = n;
-//        }
-//        n--;
-//    }
-
-//    QString suName = ".";
-
-//    file.seek(fileSize - n);
-//    while(!file.atEnd())
-//    {
-//        char *c = nullptr;
-//        file.getChar(c);
-//        suName += *c;
-//    }
-//    ui->textEdit->append(QString("检测到文件后缀"));
-//    ui->textEdit->append(suName);
-
-
-
-
 
 
     qint64 progressBarNum = 0;

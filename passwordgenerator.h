@@ -8,6 +8,7 @@
 #include <cstring>
 #include <ctime>
 #include <cstdlib>
+
 namespace Ui {
 class PasswordGenerator;
 }
@@ -22,9 +23,7 @@ public:
 
 private slots:
     void on_pushButton_3_clicked();
-
     void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
 
 private:
@@ -47,8 +46,6 @@ private:
     void RSA_Decrypt();
     //算法初始化
     void Initialize();
-
-
     int Plaintext[100];//明文
     long long Ciphertext[100];//密文
     int n, e = 0, d;

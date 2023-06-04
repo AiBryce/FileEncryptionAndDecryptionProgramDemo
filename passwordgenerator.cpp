@@ -11,9 +11,6 @@ PasswordGenerator::PasswordGenerator(QWidget *parent) :
     ui->lineEdit->setPlaceholderText("公共模数N，为加密解密同时拥有");
     ui->lineEdit_2->setPlaceholderText("公有密钥E，为加密拥有，解密时此处不填");
     ui->lineEdit_3->setPlaceholderText("公有密钥D，为解密拥有，加密时此处不填");
-
-    //-------------------------
-
 }
 
 PasswordGenerator::~PasswordGenerator()
