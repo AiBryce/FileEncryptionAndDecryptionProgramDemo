@@ -75,7 +75,7 @@ int PasswordGenerator::ProducePrimeNumber(int prime[])
 }
 
 
-//欧几里得扩展算法
+//欧几里得扩展算法，既辗转相除法
 int PasswordGenerator::Exgcd(int m,int n,int &x)
 {
     int x1,y1,x0,y0, y;
@@ -133,16 +133,11 @@ void PasswordGenerator::RSA_Initialize()
 //RSA加密
 void PasswordGenerator::RSA_Encrypt()
 {
-//    cout<<"Public Key (e, n) : e = "<<e<<" n = "<<n<<'\n';
-//    cout<<"Private Key (d, n) : d = "<<d<<" n = "<<n<<'\n'<<'\n';
-
-
     int i = 0;
     for(i = 0; i < 100; i++)
         Ciphertext[i] = Modular_Exonentiation(Plaintext[i], e, n);
 
     QString codeStt = "";
-    //cout<<"Use the public key (e, n) to encrypt:"<<'\n';
     this->ui->textEdit->append(QString("加密后密文:"));
     for(i = 0; i < 100; i++)
     {
@@ -162,7 +157,6 @@ void PasswordGenerator::RSA_Decrypt()
     for(i = 0; i < 100; i++)
         Ciphertext[i] = Modular_Exonentiation(Ciphertext[i], d, n);
     QString codeStt = "";
-    //cout<<"Use private key (d, n) to decrypt:"<<'\n';
     this->ui->textEdit->append(QString("解密后明文:"));
     for(i = 0; i < 100; i++)
     {
@@ -185,7 +179,6 @@ void PasswordGenerator::Initialize()
         Plaintext[i] = rand()%1000;
     this->ui->textEdit->append(QString("明文密码:"));
     QString codeStt = "";
-    //cout<<"Generate 100 random numbers:"<<'\n';
     for(i = 0; i < 100; i++)
     {
         cout<<Plaintext[i]<<" ";
@@ -193,7 +186,6 @@ void PasswordGenerator::Initialize()
         codeStt += QString(' ');
 
     }
-        //cout<<Plaintext[i]<<" ";
     this->ui->textEdit->append(codeStt);
 }
 
@@ -202,6 +194,23 @@ void PasswordGenerator::Initialize()
 
 void PasswordGenerator::on_pushButton_3_clicked()
 {
+    //加密
+    if(ui->lineEdit->text().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","你没有输入N！");
+        return;
+    }
+    if(ui->lineEdit_2->text().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","你没有输入E！");
+        return;
+    }
+    if(ui->textEdit->toPlainText().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","你没有输入内容！");
+        return;
+    }
+
     n = ui->lineEdit->text().toInt();
     e = ui->lineEdit_2->text().toInt();
     QStringList list = ui->textEdit->toPlainText().split(" ");
@@ -213,12 +222,11 @@ void PasswordGenerator::on_pushButton_3_clicked()
 
 void PasswordGenerator::on_pushButton_clicked()
 {
-    Initialize();
-
-    RSA_Initialize();
-
-    RSA_Encrypt();
-    RSA_Decrypt();
+    Initialize();   //初始化算法
+    RSA_Initialize();  //RSA初始化
+    RSA_Encrypt();  //加密
+    RSA_Decrypt();  //解密
+    //分别将加密解密的密文明文放入textEdit
     this->ui->textEdit->append(QString("N:"));
             this->ui->textEdit->append(QString(QString::number(n)));
     this->ui->textEdit->append(QString("E:"));
@@ -229,6 +237,23 @@ void PasswordGenerator::on_pushButton_clicked()
 
 void PasswordGenerator::on_pushButton_2_clicked()
 {
+    //解密
+    if(ui->lineEdit->text().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","你没有输入N！");
+        return;
+    }
+    if(ui->lineEdit_3->text().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","你没有输入D！");
+        return;
+    }
+    if(ui->textEdit->toPlainText().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","你没有输入内容！");
+        return;
+    }
+
     n = ui->lineEdit->text().toInt();
     d = ui->lineEdit_3->text().toInt();
         QStringList list = ui->textEdit->toPlainText().split(" ");
