@@ -7,7 +7,16 @@
 
 ## 项目名称
 
-文件加密解密程序
+文件加密解密程序 V'1.1
+
+---
+
+V 1.1 更新内容：
+
+1. 加入了MD5加密算法，对密码进行MD5加密，提高了密码的安全性。
+2. 修复了一些bug。
+
+---
 
 ## 项目功能
 
@@ -42,6 +51,7 @@
 - `widget.ui`: 主窗口界面文件
 
 - `passwordgenerator.cpp`: RAS加密解密算法源文件
+  
 - `passwordgenerator.h`: RAS加密解密算法头文件
 
 - `passwordgenerator.ui`: RAS加密解密算法界面文件
