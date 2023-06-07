@@ -11,10 +11,16 @@
 
 ---
 
-V 1.1 更新内容：
+V 1.1. 更新内容：
+
+1. 新增置入密码提示。
+2. 新增RSA加密时无密钥提示。
+3. 修复了一些bug。
+
+近期更新：
 
 1. 加入了MD5加密算法，对密码进行MD5加密，提高了密码的安全性。
-2. 修复了一些bug。
+2. 加入了RSA加密。
 
 ---
 
@@ -139,7 +145,6 @@ int PasswordGenerator::BianaryTransform(int num, int bin_num[])
     //返回二进制数的位数
     return i;
 }
-
 //反复平方求幂
 long long PasswordGenerator::Modular_Exonentiation(long long a, int b, int n)
 {
@@ -159,7 +164,6 @@ long long PasswordGenerator::Modular_Exonentiation(long long a, int b, int n)
     }
     return d;
 }
-
 //生成1000以内素数
 int PasswordGenerator::ProducePrimeNumber(int prime[])
 {
@@ -174,7 +178,6 @@ int PasswordGenerator::ProducePrimeNumber(int prime[])
 
     return c;
 }
-
 
 //欧几里得扩展算法
 int PasswordGenerator::Exgcd(int m,int n,int &x)
@@ -195,25 +198,19 @@ int PasswordGenerator::Exgcd(int m,int n,int &x)
     }
     return n;
 }
-
 //RSA初始化
 void PasswordGenerator::RSA_Initialize()
 {
     //取出1000内素数保存在prime[]数组中
     int prime[5000];
     int count_Prime = ProducePrimeNumber(prime);
-
     //随机取两个素数p,q
     srand((unsigned)time(NULL));
     int ranNum1 = rand()%count_Prime;
     int ranNum2 = rand()%count_Prime;
     int p = prime[ranNum1], q = prime[ranNum2];
-
     n = p*q;
-
     int On = (p-1)*(q-1);
-
-
     //用欧几里德扩展算法求e,d
     for(int j = 3; j < On; j+=1331)
     {
@@ -271,7 +268,6 @@ void PasswordGenerator::RSA_Decrypt()
     this->ui->textEdit->append(codeStt);
 
 }
-
 
 //算法初始化
 void PasswordGenerator::Initialize()
