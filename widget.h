@@ -26,6 +26,8 @@ private:
     int fileEncryption(); //加密
     int fileDecryption(); //解密
 protected:
+    //事件监控
+    //当鼠标拖动widget控件时，可以实现拖动窗口移动
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
@@ -37,11 +39,11 @@ public:
     ~Widget();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
-    void on_pushButton_0_clicked();
-    void on_pushButton_3_clicked();
-    void on_pushButton_4_clicked();
+    void on_pushButton_clicked();   //选择文件
+    void on_pushButton_2_clicked();   //加密
+    void on_pushButton_0_clicked();   //解密
+    void on_pushButton_3_clicked();   //关闭程序
+    void on_pushButton_4_clicked();   //生成密钥
 
 private:
     Ui::Widget *ui;

@@ -6,7 +6,7 @@ PasswordGenerator::PasswordGenerator(QWidget *parent) :
     ui(new Ui::PasswordGenerator)
 {
     ui->setupUi(this);
-
+    //文本框提示
     ui->textEdit->setPlaceholderText("若你要加密或解密你可以将密文或明文填在此处。");
     ui->lineEdit->setPlaceholderText("公共模数N，为加密解密同时拥有");
     ui->lineEdit_2->setPlaceholderText("公有密钥E，为加密拥有，解密时此处不填");
@@ -112,7 +112,6 @@ void PasswordGenerator::RSA_Initialize()
 
     int On = (p-1)*(q-1);
 
-
     //用欧几里德扩展算法求e,d
     for(int j = 3; j < On; j+=1331)
     {
@@ -139,6 +138,8 @@ void PasswordGenerator::RSA_Encrypt()
 
     QString codeStt = "";
     this->ui->textEdit->append(QString("加密后密文:"));
+
+
     for(i = 0; i < 100; i++)
     {
         cout<<Ciphertext[i]<<" ";
@@ -146,8 +147,10 @@ void PasswordGenerator::RSA_Encrypt()
         codeStt += QString(' ');
 
     }
-        this->ui->textEdit->append(codeStt);
-       encryptionCompleted(codeStt);
+    ui->textEdit->setTextColor(QColor(255,0,0));
+    this->ui->textEdit->append(codeStt);
+    ui->textEdit->setTextColor(QColor(0,0,0));
+    encryptionCompleted(codeStt);
 }
 
 //RSA解密

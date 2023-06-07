@@ -5,14 +5,22 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
+    //设置当前窗口为无边框窗口
     this->setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
+    //设置textEdit自动换行模式为不换行
     ui->textEdit->setWordWrapMode(QTextOption::NoWrap);
+    //----------------确保每次在textEdit的最后追加内容----------------------
+    //创建一个名为cur的QTextCursor类型的变量，用于与窗口中的textEdit元素建立联系
     QTextCursor cur = ui->textEdit->textCursor();
+    //对象在插入文本时，参数位置将保持不变。
     cur.setKeepPositionOnInsert(true);
+    //将光标移动到文本的末尾
     cur.movePosition(QTextCursor::End);
-
+    //-----------------------------------------------------------------
+    //设置进度条取值范围为0到100
     ui->progressBar->setRange(0,100);
+    //当lineEdit的文本发生改变，在textEdit中打印文本更改内容
     connect(this->ui->lineEdit,&QLineEdit::textChanged,this,[=](){
        this->ui->textEdit->append(QString("已经检测到："));
        this->ui->textEdit->append(ui->lineEdit_2->text());
@@ -23,11 +31,10 @@ Widget::~Widget()
 {
     delete ui;
 }
-
-
-int Widget::fileEncryption()
+//加密
+int Widget::fileEncryption()    //成功返回1，失败返回0
 {
-    //加密文件并生成新文件，成功返回1，失败返回0
+
     //密钥
     std::string passwordKey;
     //密钥长度
@@ -64,10 +71,8 @@ int Widget::fileEncryption()
         ui->textEdit->setTextColor(QColor(0,0,0));
         return 0;
     }
-
     ui->progressBar->setValue(4);
     this->ui->textEdit->append(QString("正在加密……"));
-
     ui->progressBar->setValue(6);
     //打开文件
     QFile file(filePath);
@@ -75,17 +80,13 @@ int Widget::fileEncryption()
     file.open(QIODevice::ReadOnly);
     //获取文件信息
     QFileInfo fileInfo(filePath);
-
-
     //创建加密后文件
     QString newFile = fileInfo.absolutePath() + "/fileEncryption_" +fileInfo.fileName();
     qDebug() << newFile;
     //以只写方式打开加密后文件
     QFile file_ed(newFile);
     file_ed.open(QIODevice::WriteOnly);
-
     ui->progressBar->setValue(20);
-
     //文件流打开
     QDataStream fileStrem(&file);
     QDataStream file_edStream(&file_ed);
@@ -94,7 +95,7 @@ int Widget::fileEncryption()
 
     this->ui->textEdit->append(QString("文件大小："));
     this->ui->textEdit->append(QString::number(fileSize));
-
+    //----------------加解密核心代码-----------------------
     int i = 0;
     qint64 progressBarNum = 0;
     while(!fileStrem.atEnd())
@@ -116,8 +117,7 @@ int Widget::fileEncryption()
         file_edStream.writeRawData(buffer, bytesRead);
         ui->progressBar->setValue((int)(20 + progressBarNum++ * 1.0 / fileSize * 79));
     }
-
-
+    //--------------------------------------------
     ui->progressBar->setValue(100);
     //关闭文件
     file_ed.close();
@@ -125,10 +125,10 @@ int Widget::fileEncryption()
     this->ui->textEdit->append(QString("加密完成。"));
     return 1;
 }
-
-int Widget::fileDecryption()
+//解密
+int Widget::fileDecryption()    //成功返回1，失败返回0
 {
-    //加密文件并生成新文件，成功返回1，失败返回0
+
     //密钥
     std::string passwordKey;
     //密钥长度
@@ -144,7 +144,6 @@ int Widget::fileDecryption()
         ui->textEdit->setTextColor(QColor(0,0,0));
         return 0;
     }
-
     ui->progressBar->setValue(2);
     //判断密钥是否为空
     if(!(ui->lineEdit_2->text().isEmpty()))
@@ -180,7 +179,6 @@ int Widget::fileDecryption()
     qint64 fileSize = fileInfo.size();
     this->ui->textEdit->append(QString("文件大小："));
     this->ui->textEdit->append(QString::number(fileSize));
-
     //创建加密后文件
     QString newFile = fileInfo.absolutePath() + "/fileDecryption_" +fileInfo.fileName();
     qDebug() << newFile;
@@ -189,8 +187,7 @@ int Widget::fileDecryption()
     file_ed.open(QIODevice::WriteOnly);
     ui->progressBar->setValue(20);
     QDataStream file_edStream(&file_ed);
-
-
+    //----------------加解密核心代码-----------------------
     qint64 progressBarNum = 0;
     int i = 0;
     while(!fileStrem.atEnd())
@@ -212,19 +209,15 @@ int Widget::fileDecryption()
         file_edStream.writeRawData(buffer, bytesRead);
         ui->progressBar->setValue((int)(progressBarNum++ * 1.0 / fileSize * 79));
     }
-
-
+    //-----------------------------------------------
     //关闭文件
     file_ed.close();
     file.close();
     ui->progressBar->setValue(100);
     this->ui->textEdit->append(QString("解密完成。"));
     return 1;
-
 }
-
-
-
+ //选择文件
 void Widget::on_pushButton_clicked()
 {
         this->ui->textEdit->append("你正在选择文件……\n");
@@ -248,22 +241,40 @@ void Widget::on_pushButton_clicked()
             this->ui->lineEdit->setText(filePath);
         }
 }
-
+//加密
 void Widget::on_pushButton_2_clicked()
 {
     fileEncryption();
 }
-
+//解密
 void Widget::on_pushButton_0_clicked()
 {
     fileDecryption();
 }
-
+//关闭程序
 void Widget::on_pushButton_3_clicked()
 {
     this->close();
 }
+//生成密钥
+void Widget::on_pushButton_4_clicked()
+{
+    //创建窗口对象
+    PasswordGenerator *pg = new PasswordGenerator();
+    pg->setWindowTitle(QString("RSA密钥生成器"));
+    //若成功生成明文，则将明文置入密钥窗口
+    connect(pg,&PasswordGenerator::encryptionCompleted,this,[=](QString key){
+        key.chop(1);
+       this->ui->lineEdit_2->setText(key);
+       this->ui->textEdit->append(QString("已经接收到来自密码生成器的密钥"));
+    });
+    pg->show();
 
+    //pg->close();
+}
+
+//-------------------事件监控---------------------
+//当鼠标拖动widget控件时，可以实现拖动窗口移动
 void Widget::mousePressEvent(QMouseEvent *event)
 {
     m_lastPos = event->globalPos();
@@ -284,16 +295,4 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
 
     m_lastPos = event->globalPos();
     isPressedWidget = false; // 鼠标松开时，置为false
-}
-
-void Widget::on_pushButton_4_clicked()
-{
-    PasswordGenerator *pg = new PasswordGenerator();
-    connect(pg,&PasswordGenerator::encryptionCompleted,this,[=](QString key){
-        key.chop(1);
-       this->ui->lineEdit_2->setText(key);
-    });
-    pg->show();
-
-    //pg->close();
 }
