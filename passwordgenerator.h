@@ -8,7 +8,8 @@
 #include <cstring>
 #include <ctime>
 #include <cstdlib>
-
+#include <QCryptographicHash>  //md5加密的库
+#include <QDebug>   //调试输出
 namespace Ui {
 class PasswordGenerator;
 }

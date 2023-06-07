@@ -50,7 +50,10 @@ int Widget::fileEncryption()
     //判断密钥是否为空
     if(!(ui->lineEdit_2->text().isEmpty()))
     {
-        passwordKey = ui->lineEdit_2->text().toStdString();
+        QByteArray byteText = ui->lineEdit_2->text().toUtf8();
+        QString md5 = QCryptographicHash::hash(byteText, QCryptographicHash::Md5).toHex();
+        passwordKey = md5.toStdString();
+        qDebug() << md5;
         pwdlen = (int)passwordKey.length();
         ui->textEdit->append(QString("加密程序已经成功读取你的密钥("));
         ui->textEdit->append(ui->lineEdit_2->text());
@@ -148,7 +151,9 @@ int Widget::fileDecryption()
     //判断密钥是否为空
     if(!(ui->lineEdit_2->text().isEmpty()))
     {
-        passwordKey = ui->lineEdit_2->text().toStdString();
+        QByteArray byteText = ui->lineEdit_2->text().toUtf8();
+        QString md5 = QCryptographicHash::hash(byteText, QCryptographicHash::Md5).toHex();
+        passwordKey = md5.toStdString();
         pwdlen = (int)passwordKey.length();
         ui->textEdit->append(QString("解密程序已经成功读取你的密钥("));
         ui->textEdit->append(ui->lineEdit_2->text());
