@@ -5,6 +5,12 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
+    //设置软件版本
+    version = "V1.1.5";
+    //设置图标
+    setWindowIcon(QIcon(":/new/prefix1/icon.ico"));
+    //设置标题
+    setWindowTitle(QString("文件加密解密程序%1").arg(version));
     //设置当前窗口为无边框窗口
     this->setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
@@ -40,7 +46,7 @@ Widget::Widget(QWidget *parent)
     //设置提示信息
     ui->lineEdit->setPlaceholderText("点击 选择文件 按钮选择文件或输入文件的绝对路径。");
     ui->lineEdit_2->setPlaceholderText("点击 生成密钥 按钮进行RSA混合加密或直接输入字符（支持中文）。");
-    ui->textEdit->setPlaceholderText("信息安全大作业\n小组成员：艾庆陆，黄伟，高浩天，徐玉琴。\n20230608 V1.1.2\n--------------------------------\n点击 选择文件 按钮选择文件或输入文件的绝对路径。\n点击 生成密钥 按钮进行RSA混合加密或直接输入字符（支持中文）。\n--------------------------------");
+    ui->textEdit->setPlaceholderText(QString("信息安全大作业\n小组成员：艾庆陆，黄伟，高浩天，徐玉琴。\n%1 %2\n--------------------------------\n点击 选择文件 按钮选择文件或输入文件的绝对路径。\n点击 生成密钥 按钮进行RSA混合加密或直接输入字符（支持中文）。\n--------------------------------").arg("20230608").arg(version));
 
 }
 
@@ -281,7 +287,7 @@ void Widget::on_pushButton_4_clicked()
 {
     //创建窗口对象
     PasswordGenerator *pg = new PasswordGenerator();
-    pg->setWindowTitle(QString("RSA密钥生成器"));
+    pg->setWindowTitle(QString("RSA密钥生成器V1.0"));
     //若成功生成明文，则将明文置入密钥窗口
     connect(pg,&PasswordGenerator::encryptionCompleted,this,[=](QString key){
         key.chop(1);
@@ -316,3 +322,6 @@ void Widget::mouseReleaseEvent(QMouseEvent *event)
     m_lastPos = event->globalPos();
     isPressedWidget = false; // 鼠标松开时，置为false
 }
+
+
+

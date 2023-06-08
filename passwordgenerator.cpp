@@ -5,6 +5,8 @@ PasswordGenerator::PasswordGenerator(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PasswordGenerator)
 {
+    //设置图标
+    setWindowIcon(QIcon(":/new/prefix1/icon.ico"));
     ui->setupUi(this);
     //文本框提示
     ui->textEdit->setPlaceholderText("若你要加密或解密你可以将密文或明文填在此处。");

@@ -14,6 +14,8 @@
 #include <QThread>
 #include "passwordgenerator.h"
 #include <QStandardPaths>
+#include <QGraphicsDropShadowEffect>
+#include <QPainter>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
@@ -26,6 +28,7 @@ private:
     QString filePath; //加密文件
     int fileEncryption(); //加密
     int fileDecryption(); //解密
+    QString version;  //本软件版本
 protected:
     //事件监控
     //当鼠标拖动widget控件时，可以实现拖动窗口移动

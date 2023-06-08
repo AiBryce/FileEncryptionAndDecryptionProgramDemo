@@ -35,3 +35,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     README.MD
+
+RESOURCES += \
+    resource/resource.qrc
+
+RC_FILE = AppIcon.rc
