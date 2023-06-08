@@ -23,8 +23,18 @@ Widget::Widget(QWidget *parent)
     //当lineEdit的文本发生改变，在textEdit中打印文本更改内容
     connect(this->ui->lineEdit,&QLineEdit::textChanged,this,[=](){
 
-       this->ui->textEdit->append(QString("已经检测到："));
-       this->ui->textEdit->append(ui->lineEdit->text());
+
+       QFileInfo finfo(this->ui->lineEdit->text());
+       if(finfo.isFile())
+       {
+            QString finfoStr = QString("已经检测到：");
+            finfoStr += finfo.fileName();
+            //QString finfoStr =
+            this->ui->textEdit->append(finfoStr);
+            //this->ui->textEdit->append();
+       }
+
+
     });
 
     //设置提示信息
@@ -227,23 +237,26 @@ int Widget::fileDecryption()    //成功返回1，失败返回0
  //选择文件
 void Widget::on_pushButton_clicked()
 {
-        this->ui->textEdit->append("你正在选择文件……\n");
+        this->ui->textEdit->append("你正在选择文件……");
 
         //点击按钮 弹出对话框，选择文件
-        filePath = QFileDialog::getOpenFileName(this,"打开文件","C:\\Users\\Administrator\\Desktop");
+        //获取桌面路径，默认打开桌面打开文件
+        QString desktopPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+        filePath = QFileDialog::getOpenFileName(this,"打开文件",desktopPath, tr("All Files (*.*)"));
         qDebug()<<filePath;
 
         if(filePath.isEmpty())
         {
-            this->ui->textEdit->append(QString("没有选择文件！\n"));
+            this->ui->textEdit->append(QString("没有选择文件！"));
             QMessageBox::warning(this,"警告","文件路径不能为空");
             return;
         }
         else
         {
-            this->ui->textEdit->append(QString("选择文件："));
-            this->ui->textEdit->append(filePath);
-            this->ui->textEdit->append(QString("\n"));
+            //打印提示
+            QString fStr = QString("选择文件：");
+            fStr += filePath;
+            this->ui->textEdit->append(fStr);
             //将文件路径放入到 lineEdit中
             this->ui->lineEdit->setText(filePath);
         }
