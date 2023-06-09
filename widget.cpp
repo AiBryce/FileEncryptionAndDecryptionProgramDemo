@@ -6,7 +6,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     //设置软件版本
-    version = "V1.1.6";
+    version = "V1.1.7";
     //设置图标
     setWindowIcon(QIcon(":/new/prefix1/icon.ico"));
     //设置标题
@@ -62,8 +62,27 @@ int Widget::fileEncryption()    //成功返回1，失败返回0
     int pwdlen;
     //判断文件路径是否为空
     QString filePath = ui->lineEdit->text();
+    //打开文件
+    QFile file(filePath);
+    //只读方式打开
+    file.open(QIODevice::ReadOnly);
+    //获取文件信息
+    QFileInfo fileInfo(filePath);
     if(!filePath.isEmpty())
-        this->ui->textEdit->append(QString("加密程序已经成功读取你的文件。"));
+    {
+        if(fileInfo.isFile())
+        {
+            this->ui->textEdit->append(QString("加密程序已经成功读取你的文件。"));
+
+        }
+        else
+        {
+            ui->textEdit->setTextColor(QColor(255,0,0));
+            ui->textEdit->append(QString("未检测到文件！！"));
+            ui->textEdit->setTextColor(QColor(0,0,0));
+            return 0;
+        }
+    }
     else
     {
         ui->textEdit->setTextColor(QColor(255,0,0));
@@ -99,12 +118,7 @@ int Widget::fileEncryption()    //成功返回1，失败返回0
     ui->progressBar->setValue(4);
     this->ui->textEdit->append(QString("正在加密……"));
     ui->progressBar->setValue(6);
-    //打开文件
-    QFile file(filePath);
-    //只读方式打开
-    file.open(QIODevice::ReadOnly);
-    //获取文件信息
-    QFileInfo fileInfo(filePath);
+
     //创建加密后文件
     QString newFile = fileInfo.absolutePath() + "/fileEncryption_" +fileInfo.fileName();
     qDebug() << newFile;
@@ -160,8 +174,26 @@ int Widget::fileDecryption()    //成功返回1，失败返回0
     int pwdlen;
     //判断文件路径是否为空
     QString filePath = ui->lineEdit->text();
+    //打开文件
+    QFile file(filePath);
+    //只读方式打开
+    file.open(QIODevice::ReadOnly);
+    //获取文件信息
+    QFileInfo fileInfo(filePath);
     if(!filePath.isEmpty())
-        this->ui->textEdit->append(QString("解密程序已经成功读取你的文件。"));
+    {
+        if(fileInfo.isFile())
+        {
+            this->ui->textEdit->append(QString("解密程序已经成功读取你的文件。"));
+        }
+        else
+        {
+            ui->textEdit->setTextColor(QColor(255,0,0));
+            ui->textEdit->append(QString("未检测到文件！！"));
+            ui->textEdit->setTextColor(QColor(0,0,0));
+            return 0;
+        }
+    }
     else
     {
         ui->textEdit->setTextColor(QColor(255,0,0));
@@ -196,12 +228,7 @@ int Widget::fileDecryption()    //成功返回1，失败返回0
     ui->progressBar->setValue(4);
     this->ui->textEdit->append(QString("正在加密……"));
     ui->progressBar->setValue(6);
-    //打开文件
-    QFile file(filePath);
-    //只读方式打开
-    file.open(QIODevice::ReadOnly);
-    //获取文件信息
-    QFileInfo fileInfo(filePath);
+
     //文件流打开
     QDataStream fileStrem(&file);
     //获取文件大小
