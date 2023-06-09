@@ -247,7 +247,7 @@ border: 1px solid rgb(51, 204, 204);
     <item>
      <widget class="QTextEdit" name="textEdit">
       <property name="lineWrapMode">
-       <enum>QTextEdit::NoWrap</enum>
+       <enum>QTextEdit::WidgetWidth</enum>
       </property>
       <property name="html">
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;

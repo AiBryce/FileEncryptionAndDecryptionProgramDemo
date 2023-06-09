@@ -6,7 +6,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     //设置软件版本
-    version = "V1.1.5";
+    version = "V1.1.6";
     //设置图标
     setWindowIcon(QIcon(":/new/prefix1/icon.ico"));
     //设置标题
@@ -14,8 +14,6 @@ Widget::Widget(QWidget *parent)
     //设置当前窗口为无边框窗口
     this->setWindowFlags(Qt::FramelessWindowHint);
     ui->setupUi(this);
-    //设置textEdit自动换行模式为不换行
-    ui->textEdit->setWordWrapMode(QTextOption::NoWrap);
     //----------------确保每次在textEdit的最后追加内容----------------------
     //创建一个名为cur的QTextCursor类型的变量，用于与窗口中的textEdit元素建立联系
     QTextCursor cur = ui->textEdit->textCursor();
@@ -83,9 +81,13 @@ int Widget::fileEncryption()    //成功返回1，失败返回0
         passwordKey = md5.toStdString();
         qDebug() << md5;
         pwdlen = (int)passwordKey.length();
-        ui->textEdit->append(QString("加密程序已经成功读取你的密钥("));
-        ui->textEdit->append(ui->lineEdit_2->text());
-        ui->textEdit->append(QString("字符)。"));
+        QString str = "加密程序已经成功读取你的密钥：";
+        str += ui->lineEdit_2->text();
+        ui->textEdit->append(str);
+        ui->textEdit->append("密钥已经加密！");
+        ui->textEdit->setTextColor(QColor(255,0,0));
+        ui->textEdit->append(QString("注意：本程序会加密你的密钥且不会以任何形式存储。请妥善保存你的密钥！"));
+        ui->textEdit->setTextColor(QColor(0,0,0));
     }
     else
     {
@@ -175,9 +177,13 @@ int Widget::fileDecryption()    //成功返回1，失败返回0
         QString md5 = QCryptographicHash::hash(byteText, QCryptographicHash::Md5).toHex();
         passwordKey = md5.toStdString();
         pwdlen = (int)passwordKey.length();
-        ui->textEdit->append(QString("解密程序已经成功读取你的密钥("));
-        ui->textEdit->append(ui->lineEdit_2->text());
-        ui->textEdit->append(QString(")。"));
+        QString str = "解密程序已经成功读取你的密钥：";
+        str += ui->lineEdit_2->text();
+        ui->textEdit->append(str);
+        ui->textEdit->append("密钥已经加密！");
+        ui->textEdit->setTextColor(QColor(255,0,0));
+        ui->textEdit->append(QString("注意：本程序会加密你的密钥且不会以任何形式存储。请妥善保存你的密钥！"));
+        ui->textEdit->setTextColor(QColor(0,0,0));
     }
     else
     {
