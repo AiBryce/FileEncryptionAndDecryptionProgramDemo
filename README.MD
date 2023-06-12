@@ -1,4 +1,4 @@
-文件加密解密程序 V 1.1.5
+文件加密解密程序 V 1.1.7
 FileEncryptionAndDecryptionProgramDemo
 ---
 ---
@@ -8,22 +8,22 @@ FileEncryptionAndDecryptionProgramDemo
 
 ## 程序名称
 
-文件加密解密程序 V 1.1.5
+文件加密解密程序 V 1.1.7
 
 ---
 
-V 1.1.5 更新内容：
+V 1.1.7 更新内容：
 
-1. 程序加入图标；
-2. 美化界面；
-3. 修复了一些bug。
+1. 修复了一些bug。
 
 近期更新：
 
-1. 调整提示信息排版；
-2. 修复检测文件不显示提示问题；
-3. 加入了MD5加密算法，对密码进行MD5加密，提高了密码的安全性。
-4. 加入了RSA加密。
+1. 程序加入图标；
+2. 美化界面；
+3. 调整提示信息排版；
+4. 修复检测文件不显示提示问题；
+5. 加入了MD5加密算法，对密码进行MD5加密，提高了密码的安全性。
+6. 加入了RSA加密。
 
 ---
 
@@ -76,9 +76,7 @@ while(!fileStrem.atEnd())
     uint bufferSize = 1;
     char buffer[1];
     //从文件流中读取缓存区大小的字节到buffer中
-
     qint64 bytesRead = fileStrem.readRawData(buffer, bufferSize);
-
     //检查读取是否成功
     if (bytesRead == -1)
     {
@@ -187,10 +185,7 @@ void PasswordGenerator::RSA_Initialize()
             e = j;
             break;
         }
-    }
-    this->ui->lineEdit->setText(QString(QString::number(n)));
-    this->ui->lineEdit_2->setText(QString(QString::number(e)));
-    this->ui->lineEdit_3->setText(QString(QString::number(d)));
+    } this->ui->lineEdit->setText(QString(QString::number(n)));  this->ui->lineEdit_2->setText(QString(QString::number(e)));   this->ui->lineEdit_3->setText(QString(QString::number(d)));
 }
 
 //RSA加密
