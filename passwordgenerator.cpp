@@ -147,12 +147,11 @@ void PasswordGenerator::RSA_Encrypt()
         cout<<Ciphertext[i]<<" ";
         codeStt += QString::number(Ciphertext[i]);
         codeStt += QString(' ');
-
     }
     ui->textEdit->setTextColor(QColor(255,0,0));
     this->ui->textEdit->append(codeStt);
     ui->textEdit->setTextColor(QColor(0,0,0));
-    encryptionCompleted(codeStt);
+
 }
 
 //RSA解密
@@ -171,7 +170,7 @@ void PasswordGenerator::RSA_Decrypt()
 
     }
     this->ui->textEdit->append(codeStt);
-
+    encryptionCompleted(codeStt);
 }
 
 
@@ -182,7 +181,7 @@ void PasswordGenerator::Initialize()
     srand((unsigned)time(NULL));
     for(i = 0; i < 100; i++)
         Plaintext[i] = rand()%1000;
-    this->ui->textEdit->append(QString("明文密码:"));
+    //this->ui->textEdit->append(QString("明文密码:"));
     QString codeStt = "";
     for(i = 0; i < 100; i++)
     {
@@ -191,7 +190,7 @@ void PasswordGenerator::Initialize()
         codeStt += QString(' ');
 
     }
-    this->ui->textEdit->append(codeStt);
+    //this->ui->textEdit->append(codeStt);
 }
 
 
