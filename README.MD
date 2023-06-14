@@ -96,8 +96,8 @@ while(!fileStrem.atEnd())
 [RSA加密算法](https://blog.csdn.net/lbwnbnbnbnbnbnbn/article/details/124173910)
 两篇文章对于RSA加密算法的讲解，本程序的RSA加密算法部分参考了这两篇文章。
 
+二进制转换
 ```cpp
-//二进制转换
 int PasswordGenerator::BianaryTransform(int num, int bin_num[])
 {
     int i = 0,  mod = 0;
@@ -112,7 +112,11 @@ int PasswordGenerator::BianaryTransform(int num, int bin_num[])
     //返回二进制数的位数
     return i;
 }
-//反复平方求幂
+```
+
+反复平方求幂
+
+```cpp
 long long PasswordGenerator::Modular_Exonentiation(long long a, int b, int n)
 {
     int c = 0, bin_num[1000];
@@ -130,7 +134,11 @@ long long PasswordGenerator::Modular_Exonentiation(long long a, int b, int n)
     }
     return d;
 }
-//生成1000以内素数
+```
+
+生成1000以内素数
+
+```cpp
 int PasswordGenerator::ProducePrimeNumber(int prime[])
 {
     int c = 0, vis[1001];
@@ -143,8 +151,11 @@ int PasswordGenerator::ProducePrimeNumber(int prime[])
     }
     return c;
 }
+```
 
-//欧几里得扩展算法
+欧几里得扩展算法
+
+```cpp
 int PasswordGenerator::Exgcd(int m,int n,int &x)
 {
     int x1,y1,x0,y0, y;
@@ -163,7 +174,11 @@ int PasswordGenerator::Exgcd(int m,int n,int &x)
     }
     return n;
 }
-//RSA初始化
+```
+
+RSA初始化
+
+```cpp
 void PasswordGenerator::RSA_Initialize()
 {
     //取出1000内素数保存在prime[]数组中
@@ -187,16 +202,17 @@ void PasswordGenerator::RSA_Initialize()
         }
     } this->ui->lineEdit->setText(QString(QString::number(n)));  this->ui->lineEdit_2->setText(QString(QString::number(e)));   this->ui->lineEdit_3->setText(QString(QString::number(d)));
 }
+```
 
-//RSA加密
+RSA加密
+
+```cpp
 void PasswordGenerator::RSA_Encrypt()
 {
     int i = 0;
     for(i = 0; i < 100; i++)
         Ciphertext[i] = Modular_Exonentiation(Plaintext[i], e, n);
-
     QString codeStt = "";
-    //cout<<"Use the public key (e, n) to encrypt:"<<'\n';
     this->ui->textEdit->append(QString("加密后密文:"));
     for(i = 0; i < 100; i++)
     {
@@ -207,28 +223,31 @@ void PasswordGenerator::RSA_Encrypt()
     this->ui->textEdit->append(codeStt);
        encryptionCompleted(codeStt);
 }
+```
 
-//RSA解密
+RSA解密
+
+```cpp
 void PasswordGenerator::RSA_Decrypt()
 {
     int i = 0;
     for(i = 0; i < 100; i++)
         Ciphertext[i] = Modular_Exonentiation(Ciphertext[i], d, n);
     QString codeStt = "";
-    //cout<<"Use private key (d, n) to decrypt:"<<'\n';
     this->ui->textEdit->append(QString("解密后明文:"));
     for(i = 0; i < 100; i++)
     {
         cout<<Ciphertext[i]<<" ";
         codeStt += QString::number(Ciphertext[i]);
         codeStt += QString(' ');
-
     }
     this->ui->textEdit->append(codeStt);
-
 }
+```
 
-//算法初始化
+算法初始化
+
+```cpp
 void PasswordGenerator::Initialize()
 {
     int i;
@@ -237,14 +256,12 @@ void PasswordGenerator::Initialize()
         Plaintext[i] = rand()%1000;
     this->ui->textEdit->append(QString("明文密码:"));
     QString codeStt = "";
-    //cout<<"Generate 100 random numbers:"<<'\n';
     for(i = 0; i < 100; i++)
     {
         cout<<Plaintext[i]<<" ";
         codeStt += QString::number(Plaintext[i]);
         codeStt += QString(' ');
     }
-        //cout<<Plaintext[i]<<" ";
     this->ui->textEdit->append(codeStt);
 }
 ```
