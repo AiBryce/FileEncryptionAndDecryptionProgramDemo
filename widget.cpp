@@ -44,7 +44,7 @@ Widget::Widget(QWidget *parent)
     //设置提示信息
     ui->lineEdit->setPlaceholderText("点击 选择文件 按钮选择文件或输入文件的绝对路径。");
     ui->lineEdit_2->setPlaceholderText("点击 生成密钥 按钮进行RSA混合加密或直接输入字符（支持中文）。");
-    ui->textEdit->setPlaceholderText(QString("信息安全\n小组成员：艾庆陆，黄伟，高浩天，徐玉琴。\n%1 %2\n--------------------------------\n点击 选择文件 按钮选择文件或输入文件的绝对路径。\n点击 生成密钥 按钮进行RSA混合加密或直接输入字符（支持中文）。\n--------------------------------").arg("20230608").arg(version));
+    ui->textEdit->setPlaceholderText(QString("点击 选择文件 按钮选择文件或输入文件的绝对路径。\n点击 生成密钥 按钮进行RSA混合加密或直接输入字符（支持中文）。\n--------------------------------").arg("20230608").arg(version));
 
 }
 
