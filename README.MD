@@ -12,7 +12,7 @@ FileEncryptionAndDecryptionProgramDemo
 
 ---
 
-V 1.1.7 更新内容：
+## V 1.1.7 更新内容：
 
 1. 修复了一些bug。
 
@@ -27,18 +27,11 @@ V 1.1.7 更新内容：
 
 ---
 
-## 程序功能
+## 程序介绍
 
-- 文件加密
-- 文件解密
+本程序是一个文件加密解密程序，可以对文件进行加密和解密操作，加密后的文件只能通过本程序进行解密，解密后的文件也只能通过本程序进行加密。同时，本程序还可以生成随机密码，以及对密码进行RSA加密。
 
-本项目是一个文件加密解密程序，可以对文件进行加密和解密操作，加密后的文件只能通过本程序进行解密，解密后的文件也只能通过本程序进行加密。同时，本程序还可以生成随机密码，以及对密码进行RSA加密。
-
-## 项目技术
-
-本项目基于QtQt Creator 4.12.2 (Based on Qt 5.14.2)开发。
-
-## 项目环境
+基于Qt Creator 4.12.2 (Based on Qt 5.14.2)开发。
 
 - Qt versions: Qt 5.14.2
 - Qt Creator versions: 4.12.2 (Windows 11)
@@ -75,20 +68,12 @@ while(!fileStrem.atEnd())
 {
     uint bufferSize = 1;
     char buffer[1];
-    //从文件流中读取缓存区大小的字节到buffer中
     qint64 bytesRead = fileStrem.readRawData(buffer, bufferSize);
-    //检查读取是否成功
-    if (bytesRead == -1)
-    {
-        //错误处理
-        break;
-    }
+    if (bytesRead == -1) break;
     buffer[0] ^= passwordKey[i++ % pwdlen];
-    //从buffer中写入读取到的字节到目标文件流
     file_edStream.writeRawData(buffer, bytesRead);
 }
 ```
-
 ## RAS加密解密算法
 
 感谢：
